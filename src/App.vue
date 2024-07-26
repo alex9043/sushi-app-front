@@ -1,5 +1,15 @@
 <template>
-  <router-view />
+  <div id="app">
+    <header>
+      <nav>
+        <router-link to="/">Главная</router-link>
+        <router-link to="/auth">Войти</router-link>
+      </nav>
+    </header>
+  </div>
+  <main>
+    <router-view />
+  </main>
 </template>
 
 <style lang="scss">
@@ -11,15 +21,22 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+header {
+  background: #42b983;
+  padding: 10px;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  nav {
+    display: flex;
+    justify-content: space-around;
 
-    &.router-link-exact-active {
-      color: #42b983;
+    a {
+      font-weight: bold;
+      color: #ffffff;
+      text-decoration: none;
+
+      &.router-link-exact-active {
+        color: #000000;
+      }
     }
   }
 }

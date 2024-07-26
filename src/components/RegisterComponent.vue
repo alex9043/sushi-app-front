@@ -1,75 +1,124 @@
 <template>
   <div>
-    <h2>Register</h2>
+    <h2>Регистрация</h2>
     <ErrorMessage v-if="error" :message="error" />
     <form @submit.prevent="register">
-      <h3>Personal data</h3>
+      <h3>Личные данные</h3>
       <div>
-        <label for="name">Name</label>
-        <input type="text" v-model="name" id="name" required />
+        <input
+          type="text"
+          v-model="name"
+          id="name"
+          required
+          placeholder="Имя, Фамилия*"
+        />
       </div>
       <div>
-        <label for="phone">Phone</label>
-        <input type="text" v-model="phone" id="phone" required />
+        <input
+          type="text"
+          v-model="phone"
+          id="phone"
+          required
+          placeholder="Телефон*"
+        />
       </div>
       <div>
-        <label for="email">Email</label>
-        <input type="email" v-model="email" id="email" required />
+        <input
+          type="email"
+          v-model="email"
+          id="email"
+          required
+          placeholder="E-mail*"
+        />
       </div>
       <div>
-        <label for="dateOfBirth">Date of birth</label>
-        <input type="date" v-model="dateOfBirth" id="dateOfBirth" required />
+        <label for="dateOfBirth">День рождения</label>
+        <input type="date" v-model="dateOfBirth" id="dateOfBirth" />
       </div>
-      <h3>Password</h3>
+      <h3>Придумайте пароль</h3>
       <div>
-        <label for="password">Password</label>
-        <input type="password" v-model="password" id="password" required />
+        <input
+          type="password"
+          v-model="password"
+          id="password"
+          required
+          placeholder="Пароль*"
+        />
       </div>
       <div>
-        <label for="confirmPassword">Confirm Password</label>
         <input
           type="password"
           v-model="confirmPassword"
           id="confirmPassword"
           required
+          placeholder="Повторите пароль*"
         />
       </div>
-      <h3>Address</h3>
+      <h3>Адрес</h3>
       <div>
-        <label for="addressName">Address name</label>
-        <input type="text" v-model="addressName" id="addressName" required />
+        <input
+          type="text"
+          v-model="addressName"
+          id="addressName"
+          placeholder="Название адреса"
+        />
       </div>
       <div>
-        <label for="districtId">District id</label>
-        <input type="number" v-model="districtId" id="districtId" required />
+        <select v-model="districtId" id="districtId" required>
+          <option disabled value="">Выберите район</option>
+          <option
+            v-for="district in districts"
+            :key="district.id"
+            :value="district.id"
+          >
+            {{ district.name }}
+          </option>
+        </select>
       </div>
       <div>
-        <label for="street">Street</label>
-        <input type="text" v-model="street" id="street" required />
+        <input
+          type="text"
+          v-model="street"
+          id="street"
+          required
+          placeholder="Улица*"
+        />
       </div>
       <div>
-        <label for="houseNumber">House number</label>
-        <input type="number" v-model="houseNumber" id="houseNumber" required />
+        <input
+          type="number"
+          v-model="houseNumber"
+          id="houseNumber"
+          required
+          placeholder="Дом*"
+        />
       </div>
       <div>
-        <label for="building">Building number</label>
-        <input type="number" v-model="building" id="building" required />
+        <input
+          type="number"
+          v-model="building"
+          id="building"
+          placeholder="Корпус"
+        />
       </div>
       <div>
-        <label for="entrance">Entrance</label>
-        <input type="number" v-model="entrance" id="entrance" required />
+        <input
+          type="number"
+          v-model="entrance"
+          id="entrance"
+          placeholder="Подъезд"
+        />
       </div>
       <div>
-        <label for="floor">Floor</label>
-        <input type="number" v-model="floor" id="floor" required />
+        <input type="number" v-model="floor" id="floor" placeholder="Этаж" />
       </div>
       <div>
-        <label for="apartmentNumber">Apartment number</label>
         <input
           type="number"
           v-model="apartmentNumber"
           id="apartmentNumber"
           required
+          placeholder="Кв-ра/Офис*"
         />
       </div>
       <button type="submit" :disabled="isLoading">Register</button>
@@ -78,6 +127,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import ErrorMessage from "@/components/ErrorMessage";
 
 export default {
@@ -93,7 +143,7 @@ export default {
       password: "test",
       confirmPassword: "test",
       addressName: "test",
-      districtId: 1,
+      districtId: "",
       street: "test",
       houseNumber: 1,
       building: 1,
@@ -104,11 +154,16 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("districts", ["allDistricts", "isLoading", "getError"]),
+    districts() {
+      return this.allDistricts;
+    },
     isLoading() {
       return this.$store.getters["auth/isLoading"];
     },
   },
   methods: {
+    ...mapActions("districts", ["fetchDistricts"]),
     register() {
       const payload = {
         phone: this.phone,
@@ -146,6 +201,9 @@ export default {
           this.error = errorMessage;
         });
     },
+  },
+  created() {
+    this.fetchDistricts();
   },
 };
 </script>
