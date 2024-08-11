@@ -1,5 +1,5 @@
-import axios from "@/plugins/axios/axios.js";
+import axios from '@/plugins/axios/axios.js';
 
 export const getDistricts = () => {
-  return axios.get("/districts");
+  return axios.get('/addresses/districts');
 };

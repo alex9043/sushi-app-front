@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "ProductCardView",
+  name: 'ProductCardView',
   props: {
     product: {
       type: Object,
@@ -18,8 +18,8 @@ export default {
   computed: {
     imageSrc() {
       return this.product.base64image
-        ? "data:image/png;base64,${this.product.base64image}"
-        : "./image.png";
+        ? 'data:image/png;base64,${this.product.base64image}'
+        : './image.png';
     },
   },
 };

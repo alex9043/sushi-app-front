@@ -156,8 +156,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import ErrorMessage from "@/components/ErrorMessage";
+import { mapGetters, mapActions } from 'vuex';
+import ErrorMessage from '@/components/ErrorMessage';
 
 export default {
   components: {
@@ -165,15 +165,15 @@ export default {
   },
   data() {
     return {
-      phone: "+77777777777",
-      name: "test",
-      email: "test@test.test",
-      dateOfBirth: "2000-01-01",
-      password: "test",
-      confirmPassword: "test",
-      addressName: "test",
-      districtId: "",
-      street: "test",
+      phone: '+77777777777',
+      name: 'test',
+      email: 'test@test.test',
+      dateOfBirth: '2000-01-01',
+      password: 'test',
+      confirmPassword: 'test',
+      addressName: 'test',
+      districtId: '',
+      street: 'test',
       houseNumber: 1,
       building: 1,
       entrance: 1,
@@ -183,16 +183,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("districts", ["allDistricts", "isLoading", "getError"]),
+    ...mapGetters('districts', ['allDistricts', 'isLoading', 'getError']),
     districts() {
       return this.allDistricts;
     },
     isLoading() {
-      return this.$store.getters["auth/isLoading"];
+      return this.$store.getters['auth/isLoading'];
     },
   },
   methods: {
-    ...mapActions("districts", ["fetchDistricts"]),
+    ...mapActions('districts', ['fetchDistricts']),
     register() {
       const payload = {
         phone: this.phone,
@@ -211,12 +211,12 @@ export default {
         apartmentNumber: this.apartmentNumber,
       };
       this.$store
-        .dispatch("auth/register", payload)
+        .dispatch('auth/register', payload)
         .then(() => {
-          this.$router.push("/");
+          this.$router.push('/');
         })
         .catch((error) => {
-          let errorMessage = "Registration failed";
+          let errorMessage = 'Registration failed';
           if (
             error.response &&
             error.response.data &&

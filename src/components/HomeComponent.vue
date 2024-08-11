@@ -12,16 +12,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import ProductCardView from "@/views/ProductCardView.vue";
+import { mapGetters, mapActions } from 'vuex';
+import ProductCardView from '@/views/ProductCardView.vue';
 
 export default {
-  name: "HomeComponent",
+  name: 'HomeComponent',
   components: {
     ProductCardView,
   },
   computed: {
-    ...mapGetters("home", ["allCategories", "allProducts"]),
+    ...mapGetters('home', ['allCategories', 'allProducts']),
     categories() {
       return this.allCategories;
     },
@@ -30,10 +30,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions("home", ["fetchCategories", "fetchProducts"]),
+    ...mapActions('home', ['fetchCategories', 'fetchProducts']),
     filteredProductsByCategory(categoryId) {
       return this.products.filter((product) =>
-        product.categories.some((category) => category.id === categoryId)
+        product.categories.some((category) => category.id === categoryId),
       );
     },
   },

@@ -1,4 +1,4 @@
-import { getDistricts } from "@/plugins/axios/modules/district";
+import { getDistricts } from '@/plugins/axios/modules/district';
 
 const state = {
   districts: [],
@@ -20,19 +20,19 @@ const mutations = {
 
 const actions = {
   fetchDistricts({ commit }) {
-    commit("SET_LOADING", true);
-    commit("SET_ERROR", null);
+    commit('SET_LOADING', true);
+    commit('SET_ERROR', null);
 
     getDistricts()
       .then((response) => {
         console.log(response);
-        commit("SET_DISTRICTS", response.data.districts);
+        commit('SET_DISTRICTS', response.data.districts);
       })
       .catch((error) => {
-        commit("SET_ERROR", error);
+        commit('SET_ERROR', error);
       })
       .finally(() => {
-        commit("SET_LOADING", false);
+        commit('SET_LOADING', false);
       });
   },
 };

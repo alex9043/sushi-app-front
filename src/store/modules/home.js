@@ -1,4 +1,4 @@
-import { getProducts, getCategories } from "@/plugins/axios/modules/home";
+import { getProducts, getCategories } from '@/plugins/axios/modules/home';
 
 const state = {
   products: [],
@@ -18,13 +18,13 @@ const actions = {
   fetchProducts({ commit }) {
     getProducts().then((response) => {
       console.log(response);
-      commit("SET_PRODUCTS", response.data.products);
+      commit('SET_PRODUCTS', response.data.products);
     });
   },
   fetchCategories({ commit }) {
     getCategories().then((response) => {
       console.log(response);
-      commit("SET_CATEGORIES", response.data.categories);
+      commit('SET_CATEGORIES', response.data.categories);
     });
   },
 };

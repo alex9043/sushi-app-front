@@ -37,20 +37,20 @@
 </template>
 
 <script>
-import ErrorMessage from "@/components/ErrorMessage";
+import ErrorMessage from '@/components/ErrorMessage';
 export default {
   components: {
     ErrorMessage,
   },
   data() {
     return {
-      phone: "+77777777777",
-      password: "test",
+      phone: '+77777777777',
+      password: 'test',
     };
   },
   computed: {
     isLoading() {
-      return this.$store.getters["auth/isLoading"];
+      return this.$store.getters['auth/isLoading'];
     },
   },
   methods: {
@@ -60,12 +60,12 @@ export default {
         password: this.password,
       };
       this.$store
-        .dispatch("auth/login", payload)
+        .dispatch('auth/login', payload)
         .then(() => {
-          this.$router.push("/");
+          this.$router.push('/');
         })
         .catch((error) => {
-          let errorMessage = "Registration failed";
+          let errorMessage = 'Registration failed';
           if (
             error.response &&
             error.response.data &&

@@ -8,10 +8,10 @@ const getters = {
 
 const actions = {
   setError({ commit }, message) {
-    commit("setError", message);
+    commit('setError', message);
   },
   clearError({ commit }) {
-    commit("clearError");
+    commit('clearError');
   },
 };
 
