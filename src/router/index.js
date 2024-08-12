@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: '/auth',
-    name: 'Authroization',
+    name: 'Authorization',
     component: AuthorizationComponent,
   },
 ];

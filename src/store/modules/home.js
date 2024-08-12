@@ -17,13 +17,11 @@ const mutations = {
 const actions = {
   fetchProducts({ commit }) {
     getProducts().then((response) => {
-      console.log(response);
       commit('SET_PRODUCTS', response.data.products);
     });
   },
   fetchCategories({ commit }) {
     getCategories().then((response) => {
-      console.log(response);
       commit('SET_CATEGORIES', response.data.categories);
     });
   },

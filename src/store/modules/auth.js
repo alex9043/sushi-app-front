@@ -1,9 +1,12 @@
 import { register, login } from '@/plugins/axios/modules/auth';
+import { jwtDecode } from 'jwt-decode';
 
 const state = {
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
-  roles: [],
+  isUser: false,
+  isAdmin: false,
+  isAuthenticated: false,
   loading: false,
   error: null,
 };
@@ -13,8 +16,10 @@ const mutations = {
     state.accessToken = tokens.accessToken;
     state.refreshToken = tokens.refreshToken;
   },
-  SET_ROLES(state, roles) {
-    state.roles = roles;
+  SET_AUTH_STATE(state, { isUser, isAdmin, isAuthenticated }) {
+    state.isUser = isUser;
+    state.isAdmin = isAdmin;
+    state.isAuthenticated = isAuthenticated;
   },
   SET_LOADING(state, isLoading) {
     state.loading = isLoading;
@@ -28,14 +33,16 @@ const mutations = {
   LOGOUT(state) {
     state.accessToken = null;
     state.refreshToken = null;
-    state.roles = [];
+    state.isUser = false;
+    state.isAdmin = false;
+    state.isAuthenticated = false;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   },
 };
 
 const actions = {
-  register({ commit }, payload) {
+  register({ commit, dispatch }, payload) {
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
     return register(payload)
@@ -44,6 +51,7 @@ const actions = {
         localStorage.setItem('accessToken', tokens.accessToken);
         localStorage.setItem('refreshToken', tokens.refreshToken);
         commit('SET_TOKENS', tokens);
+        dispatch('decodeAndSetAuthState', tokens.accessToken);
       })
       .catch((error) => {
         commit('SET_ERROR', error);
@@ -52,16 +60,16 @@ const actions = {
         commit('SET_LOADING', false);
       });
   },
-  login({ commit }, payload) {
+  login({ commit, dispatch }, payload) {
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
     return login(payload)
       .then((response) => {
-        const { accessToken, refreshToken, roles } = response.data;
+        const { accessToken, refreshToken } = response.data;
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         commit('SET_TOKENS', { accessToken, refreshToken });
-        commit('SET_ROLES', roles);
+        dispatch('decodeAndSetAuthState', accessToken);
       })
       .catch((error) => {
         commit('SET_ERROR', error);
@@ -70,13 +78,28 @@ const actions = {
         commit('SET_LOADING', false);
       });
   },
+  decodeAndSetAuthState({ commit }, accessToken) {
+    const decodedToken = jwtDecode(accessToken);
+    const roles = decodedToken.roles || [];
+    const isUser = roles.includes('ROLE_USER');
+    const isAdmin = roles.includes('ROLE_ADMIN');
+    const isAuthenticated = true;
+
+    commit('SET_AUTH_STATE', { isUser, isAdmin, isAuthenticated });
+  },
+  logout({ commit }) {
+    commit('LOGOUT');
+  },
 };
 
 const getters = {
-  isAuthenticated: (state) => !!state.accessToken,
+  isAuthenticated: (state) => state.isAuthenticated,
+  isUser: (state) => state.isUser,
+  isAdmin: (state) => state.isAdmin,
   isLoading: (state) => state.loading,
+  getAccessToken: (state) => state.accessToken,
+  getRefreshToken: (state) => state.refreshToken,
   getError: (state) => state.error,
-  getRoles: (state) => state.roles,
 };
 
 export default {
