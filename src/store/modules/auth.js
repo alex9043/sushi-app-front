@@ -78,14 +78,24 @@ const actions = {
         commit('SET_LOADING', false);
       });
   },
+  initializeAuthState({ dispatch }) {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      dispatch('decodeAndSetAuthState', accessToken);
+    }
+  },
   decodeAndSetAuthState({ commit }, accessToken) {
-    const decodedToken = jwtDecode(accessToken);
-    const roles = decodedToken.roles || [];
-    const isUser = roles.includes('ROLE_USER');
-    const isAdmin = roles.includes('ROLE_ADMIN');
-    const isAuthenticated = true;
+    try {
+      const decodedToken = jwtDecode(accessToken);
+      const roles = decodedToken.roles || [];
+      const isUser = roles.includes('ROLE_USER');
+      const isAdmin = roles.includes('ROLE_ADMIN');
+      const isAuthenticated = true;
 
-    commit('SET_AUTH_STATE', { isUser, isAdmin, isAuthenticated });
+      commit('SET_AUTH_STATE', { isUser, isAdmin, isAuthenticated });
+    } catch (error) {
+      commit('LOGOUT');
+    }
   },
   logout({ commit }) {
     commit('LOGOUT');

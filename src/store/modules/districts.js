@@ -25,7 +25,6 @@ const actions = {
 
     getDistricts()
       .then((response) => {
-        console.log(response);
         commit('SET_DISTRICTS', response.data.districts);
       })
       .catch((error) => {
