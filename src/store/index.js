@@ -3,6 +3,7 @@ import auth from './modules/auth';
 import error from './modules/error';
 import districts from './modules/districts';
 import home from './modules/home';
+import cart from './modules/cart';
 
 export default createStore({
   modules: {
@@ -10,5 +11,6 @@ export default createStore({
     error,
     districts,
     home,
+    cart,
   },
 });
