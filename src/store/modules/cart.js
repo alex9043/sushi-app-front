@@ -1,4 +1,9 @@
-import { getCart, addToCart } from '@/plugins/axios/modules/cart';
+import {
+  getCart,
+  addToCart,
+  removeFromCart,
+  clearCart,
+} from '@/plugins/axios/modules/cart';
 
 const state = {
   loading: false,
@@ -42,6 +47,34 @@ const actions = {
     return addToCart(payload)
       .then((response) => {
         commit('SET_CART', response.data.cartItems || []);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  removeFromCart({ commit }, payload) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return removeFromCart(payload)
+      .then((response) => {
+        commit('SET_CART', response.data.cartItems || []);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  clearCart({ commit }) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return clearCart()
+      .then(() => {
+        commit('SET_CART', []);
       })
       .catch((error) => {
         commit('SET_ERROR', error.message);

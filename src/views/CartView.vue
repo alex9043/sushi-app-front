@@ -5,14 +5,19 @@
     </div>
     <div v-else class="cart-items">
       <div v-for="item in cart" :key="item.id" class="cart-item">
+        <button @click="decrementItem(item.product.id)">-</button>
         <p>{{ item.product.name }}</p>
         <p>Количество: {{ item.count }}</p>
         <p>Цена: {{ item.product.price * item.count }}</p>
+        <button @click="incrementItem(item.product.id)">+</button>
       </div>
+      <button @click="removeCart">X</button>
     </div>
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'CartView',
   props: {
@@ -24,6 +29,18 @@ export default {
   computed: {
     isCartEmpty() {
       return this.cart.length === 0;
+    },
+  },
+  methods: {
+    ...mapActions('cart', ['addToCart', 'removeFromCart', 'clearCart']),
+    incrementItem(productId) {
+      this.addToCart(productId);
+    },
+    decrementItem(productId) {
+      this.removeFromCart(productId);
+    },
+    removeCart() {
+      this.clearCart();
     },
   },
 };
