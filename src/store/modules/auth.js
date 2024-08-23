@@ -42,7 +42,7 @@ const mutations = {
 };
 
 const actions = {
-  register({ commit, dispatch }, payload) {
+  register({ commit, dispatch, rootGetters }, payload) {
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
     return register(payload)
@@ -52,6 +52,9 @@ const actions = {
         localStorage.setItem('refreshToken', tokens.refreshToken);
         commit('SET_TOKENS', tokens);
         dispatch('decodeAndSetAuthState', tokens.accessToken);
+        if (rootGetters['cart/getCart'].length > 0) {
+          dispatch('syncCartWithServer');
+        }
       })
       .catch((error) => {
         commit('SET_ERROR', error);
@@ -60,7 +63,7 @@ const actions = {
         commit('SET_LOADING', false);
       });
   },
-  login({ commit, dispatch }, payload) {
+  login({ commit, dispatch, rootGetters }, payload) {
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
     return login(payload)
@@ -70,6 +73,9 @@ const actions = {
         localStorage.setItem('refreshToken', refreshToken);
         commit('SET_TOKENS', { accessToken, refreshToken });
         dispatch('decodeAndSetAuthState', accessToken);
+        if (rootGetters['cart/getCart'].length > 0) {
+          dispatch('syncCartWithServer');
+        }
       })
       .catch((error) => {
         commit('SET_ERROR', error);
@@ -96,6 +102,10 @@ const actions = {
     } catch (error) {
       commit('LOGOUT');
     }
+  },
+  syncCartWithServer({ dispatch }) {
+    console.log('sync');
+    dispatch('cart/refreshCart', null, { root: true });
   },
   logout({ commit }) {
     commit('LOGOUT');

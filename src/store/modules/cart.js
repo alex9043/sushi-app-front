@@ -3,6 +3,7 @@ import {
   addToCart,
   removeFromCart,
   clearCart,
+  refreshCart,
 } from '@/plugins/axios/modules/cart';
 
 const state = {
@@ -154,6 +155,26 @@ const actions = {
       commit('SET_CART', []);
       commit('SET_LOADING', false);
     }
+  },
+  refreshCart({ commit }) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    const localCart = JSON.parse(localStorage.getItem('cart'));
+    const cart = localCart.map((i) => ({
+      count: i.count,
+      productId: i.product.id,
+    }));
+    return refreshCart(cart)
+      .then((response) => {
+        commit('SET_CART', response.data.cartItems || []);
+        localStorage.removeItem('cart');
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
   },
 };
 

@@ -15,3 +15,7 @@ export const removeFromCart = (productId) => {
 export const clearCart = () => {
   return axios.delete('/cart/delete');
 };
+
+export const refreshCart = (cart) => {
+  return axios.post('/cart/refresh', { cart });
+};
