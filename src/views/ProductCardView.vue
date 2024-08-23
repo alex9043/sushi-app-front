@@ -1,10 +1,10 @@
 <template>
   <div class="product-card">
     <!-- <img :src="imageSrc" alt="Product Image" /> -->
-    <button @click="decrementItem(product.id)">-</button>
+    <button @click="decrementItem(product)">-</button>
     <h3>{{ product.name }}</h3>
     <p>{{ product.price }}</p>
-    <button @click="incrementItem(product.id)">+</button>
+    <button @click="incrementItem(product)">+</button>
   </div>
 </template>
 
@@ -28,11 +28,11 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart']),
-    incrementItem(productId) {
-      this.addToCart(productId);
+    incrementItem(product) {
+      this.addToCart(product);
     },
-    decrementItem(productId) {
-      this.removeFromCart(productId);
+    decrementItem(product) {
+      this.removeFromCart(product);
     },
   },
 };

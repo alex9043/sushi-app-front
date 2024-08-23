@@ -9,7 +9,7 @@
       </nav>
     </header>
     <div class="cart-wrapper" v-if="showCart">
-      <CartView :cart="cart" />
+      <CartView />
     </div>
   </div>
   <main>
@@ -33,9 +33,6 @@ export default {
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('cart', ['getCart']),
-    cart() {
-      return this.getCart;
-    },
   },
   methods: {
     ...mapActions('auth', ['logout', 'initializeAuthState']),
@@ -57,6 +54,7 @@ export default {
   },
   created() {
     this.initializeAuthState();
+    this.fetchCart();
   },
 };
 </script>

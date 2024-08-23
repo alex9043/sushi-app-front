@@ -27,61 +27,133 @@ const mutations = {
 };
 
 const actions = {
-  fetchCart({ commit }) {
+  fetchCart({ commit, rootGetters }) {
+    const isAuth = rootGetters['auth/isAuthenticated'];
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
-    return getCart()
-      .then((response) => {
-        commit('SET_CART', response.data.cartItems || []);
-      })
-      .catch((error) => {
-        commit('SET_ERROR', error.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
+    if (isAuth) {
+      return getCart()
+        .then((response) => {
+          commit('SET_CART', response.data.cartItems || []);
+        })
+        .catch((error) => {
+          commit('SET_ERROR', error.message);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
+        });
+    } else {
+      commit('SET_CART', JSON.parse(localStorage.getItem('cart')) || []);
+      commit('SET_LOADING', false);
+    }
   },
-  addToCart({ commit }, payload) {
+  addToCart({ commit, rootGetters }, payload) {
+    const isAuth = rootGetters['auth/isAuthenticated'];
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
-    return addToCart(payload)
-      .then((response) => {
-        commit('SET_CART', response.data.cartItems || []);
-      })
-      .catch((error) => {
-        commit('SET_ERROR', error.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
+    if (isAuth) {
+      return addToCart(payload.id)
+        .then((response) => {
+          commit('SET_CART', response.data.cartItems || []);
+        })
+        .catch((error) => {
+          commit('SET_ERROR', error.message);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
+        });
+    } else {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length !== 0) {
+        let productIdx = cart.findIndex(
+          (item) => item.product.id === payload.id,
+        );
+        if (productIdx !== -1) {
+          cart[productIdx].count += 1;
+        } else {
+          cart.push({
+            count: 1,
+            product: {
+              id: payload.id,
+              name: payload.name,
+              price: payload.price,
+            },
+          });
+        }
+      } else {
+        cart.push({
+          count: 1,
+          product: {
+            id: payload.id,
+            name: payload.name,
+            price: payload.price,
+          },
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      commit('SET_CART', cart);
+      commit('SET_LOADING', false);
+    }
   },
-  removeFromCart({ commit }, payload) {
+  removeFromCart({ commit, rootGetters }, payload) {
+    const isAuth = rootGetters['auth/isAuthenticated'];
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
-    return removeFromCart(payload)
-      .then((response) => {
-        commit('SET_CART', response.data.cartItems || []);
-      })
-      .catch((error) => {
-        commit('SET_ERROR', error.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
+    if (isAuth) {
+      commit('SET_LOADING', true);
+      commit('CLEAR_ERROR');
+      return removeFromCart(payload.id)
+        .then((response) => {
+          commit('SET_CART', response.data.cartItems || []);
+        })
+        .catch((error) => {
+          commit('SET_ERROR', error.message);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
+        });
+    } else {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length !== 0) {
+        let productIdx = cart.findIndex(
+          (item) => item.product.id === payload.id,
+        );
+        if (productIdx !== -1) {
+          cart[productIdx].count -= 1;
+          if (cart[productIdx].count === 0) {
+            cart.splice(productIdx, 1);
+          }
+        }
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      commit('SET_CART', cart);
+      commit('SET_LOADING', false);
+    }
   },
-  clearCart({ commit }) {
+  clearCart({ commit, rootGetters }) {
+    const isAuth = rootGetters['auth/isAuthenticated'];
     commit('SET_LOADING', true);
     commit('CLEAR_ERROR');
-    return clearCart()
-      .then(() => {
-        commit('SET_CART', []);
-      })
-      .catch((error) => {
-        commit('SET_ERROR', error.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
+    if (isAuth) {
+      return clearCart()
+        .then(() => {
+          commit('SET_CART', []);
+        })
+        .catch((error) => {
+          commit('SET_ERROR', error.message);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
+        });
+    } else {
+      localStorage.removeItem('cart');
+      commit('SET_CART', []);
+      commit('SET_LOADING', false);
+    }
   },
 };
 

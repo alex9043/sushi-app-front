@@ -5,39 +5,38 @@
     </div>
     <div v-else class="cart-items">
       <div v-for="item in cart" :key="item.id" class="cart-item">
-        <button @click="decrementItem(item.product.id)">-</button>
+        <button @click="decrementItem(item.product)">-</button>
         <p>{{ item.product.name }}</p>
         <p>Количество: {{ item.count }}</p>
         <p>Цена: {{ item.product.price * item.count }}</p>
-        <button @click="incrementItem(item.product.id)">+</button>
+        <button @click="incrementItem(item.product)">+</button>
       </div>
       <button @click="removeCart">X</button>
     </div>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CartView',
-  props: {
-    cart: {
-      type: Array,
-      required: true,
-    },
-  },
   computed: {
+    ...mapGetters('cart', ['getCart']),
+    ...mapGetters('auth', ['isAuthenticated']),
     isCartEmpty() {
       return this.cart.length === 0;
+    },
+    cart() {
+      return this.getCart;
     },
   },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart', 'clearCart']),
-    incrementItem(productId) {
-      this.addToCart(productId);
+    incrementItem(product) {
+      this.addToCart(product);
     },
-    decrementItem(productId) {
-      this.removeFromCart(productId);
+    decrementItem(product) {
+      this.removeFromCart(product);
     },
     removeCart() {
       this.clearCart();
