@@ -37,6 +37,11 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     const originalRequest = error.config;
+    const authUrls = ['/auth/sign-in', '/auth/sign-up', '/auth/refresh-token'];
+
+    if (authUrls.some((url) => originalRequest.url.includes(url))) {
+      return Promise.reject(error);
+    }
 
     if (
       error.response &&
@@ -72,7 +77,6 @@ axios.interceptors.response.use(
             processQueue(err, null);
             store.commit('auth/LOGOUT');
             router.push({ name: 'Home' });
-            return Promise.reject(err);
           })
           .finally(() => {
             isRefreshing = false;

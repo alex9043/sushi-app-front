@@ -56,8 +56,15 @@ const actions = {
           dispatch('syncCartWithServer');
         }
       })
+      .then(() => {
+        return { success: true };
+      })
       .catch((error) => {
-        commit('SET_ERROR', error);
+        console.log(error.response.data.errorMessages);
+        commit('SET_ERROR', error.response.data.errorMessages);
+        return {
+          success: false,
+        };
       })
       .finally(() => {
         commit('SET_LOADING', false);
@@ -77,8 +84,14 @@ const actions = {
           dispatch('syncCartWithServer');
         }
       })
-      .catch((error) => {
-        commit('SET_ERROR', error);
+      .then(() => {
+        return { success: true };
+      })
+      .catch(() => {
+        commit('SET_ERROR', [{ message: 'Нерпвильные логин или пароль' }]);
+        return {
+          success: false,
+        };
       })
       .finally(() => {
         commit('SET_LOADING', false);

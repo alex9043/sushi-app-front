@@ -19,7 +19,7 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'CartView',
+  name: 'CartComponent',
   computed: {
     ...mapGetters('cart', ['getCart']),
     ...mapGetters('auth', ['isAuthenticated']),

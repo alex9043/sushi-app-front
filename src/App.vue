@@ -9,7 +9,7 @@
       </nav>
     </header>
     <div class="cart-wrapper" v-if="showCart">
-      <CartView />
+      <CartComponent />
     </div>
   </div>
   <main>
@@ -19,11 +19,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import CartView from '@/views/CartView.vue';
+import CartComponent from '@/components/CartComponent.vue';
 
 export default {
   components: {
-    CartView,
+    CartComponent,
   },
   data() {
     return {

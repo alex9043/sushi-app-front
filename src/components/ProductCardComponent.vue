@@ -12,7 +12,7 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'ProductCardView',
+  name: 'ProductCardComponent',
   props: {
     product: {
       type: Object,

@@ -1,7 +1,7 @@
 <template>
   <div class="form-container">
     <h2>Регистрация</h2>
-    <ErrorMessage v-if="error" :message="error" />
+    <ErrorMessage v-if="error" :messages="error" />
     <form @submit.prevent="register">
       <h3>Личные данные</h3>
       <div class="form-group">
@@ -149,7 +149,7 @@
         />
       </div>
       <button type="submit" :disabled="isLoading" class="form-button">
-        Register
+        Зарегистрироваться
       </button>
     </form>
   </div>
@@ -157,9 +157,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import ErrorMessage from '@/components/ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 export default {
+  name: 'RegistrationForm',
   components: {
     ErrorMessage,
   },
@@ -179,7 +180,6 @@ export default {
       entrance: 1,
       floor: 1,
       apartmentNumber: 1,
-      error: null,
     };
   },
   computed: {
@@ -189,6 +189,9 @@ export default {
     },
     isLoading() {
       return this.$store.getters['auth/isLoading'];
+    },
+    error() {
+      return this.$store.getters['auth/getError'];
     },
   },
   methods: {
@@ -210,25 +213,11 @@ export default {
         floor: this.floor,
         apartmentNumber: this.apartmentNumber,
       };
-      this.$store
-        .dispatch('auth/register', payload)
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch((error) => {
-          let errorMessage = 'Registration failed';
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.errorMessages
-          ) {
-            errorMessage =
-              error.response.data.errorMessages[0]?.message || errorMessage;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
-          this.error = errorMessage;
-        });
+      this.$store.dispatch('auth/register', payload).then((result) => {
+        if (result.success) {
+          this.$router.push('/'); // Перенаправление при успешной регистрации
+        }
+      });
     },
   },
   created() {
@@ -236,47 +225,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.form-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-input {
-  width: calc(100% - 20px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #42b983;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.form-button:disabled {
-  background-color: #d3d3d3;
-  cursor: not-allowed;
-}
-
-h2,
-h3 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-</style>

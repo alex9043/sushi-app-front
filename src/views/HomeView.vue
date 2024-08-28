@@ -2,7 +2,7 @@
   <div v-for="category in categories" :key="category.id" class="category">
     <h2>{{ category.name }}</h2>
     <div class="products">
-      <ProductCardView
+      <ProductCardComponent
         v-for="product in filteredProductsByCategory(category.id)"
         :key="product.id"
         :product="product"
@@ -13,12 +13,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import ProductCardView from '@/views/ProductCardView.vue';
+import ProductCardComponent from '@/components/ProductCardComponent.vue';
 
 export default {
-  name: 'HomeComponent',
+  name: 'HomeView',
   components: {
-    ProductCardView,
+    ProductCardComponent,
   },
   computed: {
     ...mapGetters('home', ['allCategories', 'allProducts']),

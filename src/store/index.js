@@ -1,9 +1,9 @@
 import { createStore } from 'vuex';
-import auth from './modules/auth';
-import error from './modules/error';
-import districts from './modules/districts';
-import home from './modules/home';
-import cart from './modules/cart';
+import auth from '@/store/modules/auth';
+import error from '@/store/modules/error';
+import districts from '@/store/modules/districts';
+import home from '@/store/modules/home';
+import cart from '@/store/modules/cart';
 
 export default createStore({
   modules: {
