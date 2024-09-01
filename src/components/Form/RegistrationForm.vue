@@ -183,15 +183,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('districts', ['allDistricts', 'isLoading', 'getError']),
+    ...mapGetters('districts', ['allDistricts']),
+    ...mapGetters('auth', ['isLoading', 'getError']),
     districts() {
       return this.allDistricts;
     },
     isLoading() {
-      return this.$store.getters['auth/isLoading'];
+      return this.isLoading;
     },
     error() {
-      return this.$store.getters['auth/getError'];
+      return this.getError;
     },
   },
   methods: {

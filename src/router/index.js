@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import AuthView from '@/views/AuthView.vue';
+import OrderView from '@/views/OrderView.vue';
 
 const routes = [
   {
@@ -10,8 +11,13 @@ const routes = [
   },
   {
     path: '/auth',
-    name: 'AuthView',
+    name: 'Auth',
     component: AuthView,
+  },
+  {
+    path: '/order',
+    name: 'Order',
+    component: OrderView,
   },
 ];
 

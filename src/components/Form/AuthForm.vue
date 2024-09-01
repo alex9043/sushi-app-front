@@ -32,6 +32,7 @@
 
 <script>
 import ErrorMessage from '@/components/ErrorMessage.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AuthForm',
@@ -40,16 +41,17 @@ export default {
   },
   data() {
     return {
-      phone: '',
-      password: '',
+      phone: '+77777777777',
+      password: 'test',
     };
   },
   computed: {
+    ...mapGetters('auth', ['isLoading', 'getError']),
     isLoading() {
-      return this.$store.getters['auth/isLoading'];
+      return this.isLoading;
     },
     error() {
-      return this.$store.getters['auth/getError'];
+      return this.getError;
     },
   },
   methods: {
@@ -59,7 +61,6 @@ export default {
         password: this.password,
       };
       this.$store.dispatch('auth/login', payload).then((result) => {
-        console.log(result.error);
         if (result.success) {
           this.$router.push('/');
         }

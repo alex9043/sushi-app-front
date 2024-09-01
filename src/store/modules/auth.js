@@ -60,7 +60,6 @@ const actions = {
         return { success: true };
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessages);
         commit('SET_ERROR', error.response.data.errorMessages);
         return {
           success: false,

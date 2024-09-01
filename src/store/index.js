@@ -4,6 +4,7 @@ import error from '@/store/modules/error';
 import districts from '@/store/modules/districts';
 import home from '@/store/modules/home';
 import cart from '@/store/modules/cart';
+import order from '@/store/modules/order';
 
 export default createStore({
   modules: {
@@ -12,5 +13,6 @@ export default createStore({
     districts,
     home,
     cart,
+    order,
   },
 });

@@ -5,13 +5,24 @@
     </div>
     <div v-else class="cart-items">
       <div v-for="item in cart" :key="item.id" class="cart-item">
-        <button @click="decrementItem(item.product)">-</button>
-        <p>{{ item.product.name }}</p>
-        <p>Количество: {{ item.count }}</p>
-        <p>Цена: {{ item.product.price * item.count }}</p>
-        <button @click="incrementItem(item.product)">+</button>
+        <button @click="decrementItem(item.product)" class="cart-item-btn">
+          -
+        </button>
+        <div class="cart-item-wrapper">
+          <p>{{ item.product.name }}</p>
+          <p>Количество: {{ item.count }}</p>
+          <p>Цена: {{ item.product.price * item.count }}</p>
+        </div>
+        <button @click="incrementItem(item.product)" class="cart-item-btn">
+          +
+        </button>
       </div>
       <button @click="removeCart">X</button>
+    </div>
+    <div class="cart-link" v-if="!isOrder">
+      <router-link to="/order">{{
+        cart.length > 0 ? 'Перейти к заказу' : 'Посмотреть последний заказ'
+      }}</router-link>
     </div>
   </div>
 </template>
@@ -20,6 +31,13 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CartComponent',
+  props: {
+    isOrder: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+  },
   computed: {
     ...mapGetters('cart', ['getCart']),
     ...mapGetters('auth', ['isAuthenticated']),
@@ -61,8 +79,28 @@ export default {
     .cart-item {
       border-bottom: 1px solid #dddddd;
       padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       &:last-child {
         border-bottom: none;
+      }
+      .cart-item-btn {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+  .cart-link {
+    margin-top: 15px;
+    text-align: center;
+    a {
+      color: #333333;
+      border: 1px solid #333333;
+      padding: 5px 10px;
+      &:hover {
+        background: #cccccc;
+        color: #333333;
       }
     }
   }
