@@ -40,11 +40,6 @@ export default {
   methods: {
     ...mapActions('order', ['checkLastOrder']),
   },
-  watch: {
-    checkOrder(newVal, oldVal) {
-      if (newVal !== oldVal) return this.checkOrder();
-    },
-  },
 };
 </script>
 

@@ -19,13 +19,6 @@ export default {
       required: true,
     },
   },
-  computed: {
-    imageSrc() {
-      return this.product.base64image
-        ? 'data:image/png;base64,${this.product.base64image}'
-        : './image.png';
-    },
-  },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart']),
     incrementItem(product) {

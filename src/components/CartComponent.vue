@@ -48,9 +48,6 @@ export default {
     cart() {
       return this.getCart;
     },
-    lastOrder() {
-      return this.getLastOrder;
-    },
   },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart', 'clearCart']),
