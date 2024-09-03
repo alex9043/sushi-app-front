@@ -41,15 +41,20 @@ export default {
   computed: {
     ...mapGetters('cart', ['getCart']),
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('order', ['getLastOrder']),
     isCartEmpty() {
       return this.cart.length === 0;
     },
     cart() {
       return this.getCart;
     },
+    lastOrder() {
+      return this.getLastOrder;
+    },
   },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart', 'clearCart']),
+    ...mapActions('order', ['checkLastOrder']),
     incrementItem(product) {
       this.addToCart(product);
     },
@@ -59,6 +64,9 @@ export default {
     removeCart() {
       this.clearCart();
     },
+  },
+  created() {
+    this.checkLastOrder();
   },
 };
 </script>
