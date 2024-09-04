@@ -2,7 +2,7 @@
   <div class="form-container">
     <h2>Регистрация</h2>
     <ErrorMessage v-if="error" :messages="error" />
-    <form @submit.prevent="register">
+    <form @submit.prevent="submitRegister">
       <h3>Личные данные</h3>
       <div class="form-group">
         <input
@@ -197,7 +197,8 @@ export default {
   },
   methods: {
     ...mapActions('districts', ['fetchDistricts']),
-    register() {
+    ...mapActions('auth', ['register']),
+    submitRegister() {
       const payload = {
         phone: this.phone,
         name: this.name,
@@ -214,7 +215,7 @@ export default {
         floor: this.floor,
         apartmentNumber: this.apartmentNumber,
       };
-      this.$store.dispatch('auth/register', payload).then((result) => {
+      this.register(payload).then((result) => {
         if (result.success) {
           this.$router.push('/'); // Перенаправление при успешной регистрации
         }

@@ -1,7 +1,7 @@
 <template>
   <div class="order-form-wrapper">
     <ErrorMessage v-if="error" :messages="error" />
-    <form @submit.prevent="createOrderRequest">
+    <form @submit.prevent="submitOrder">
       <div class="user-group" v-if="!isAuth">
         <h3>Ваши данные</h3>
         <div class="form-group">
@@ -225,7 +225,7 @@ export default {
     ...mapActions('districts', ['fetchDistricts']),
     ...mapActions('order', ['createOrder']),
     ...mapActions('cart', ['clearCart']),
-    createOrderRequest() {
+    submitOrder() {
       const orderItems = this.getCart.map((i) => {
         return {
           count: i.count,

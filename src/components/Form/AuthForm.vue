@@ -2,7 +2,7 @@
   <div class="form-container">
     <h2>Вход на сайт</h2>
     <ErrorMessage v-if="error" :messages="error" />
-    <form @submit.prevent="login">
+    <form @submit.prevent="submitLogin">
       <div class="form-group">
         <input
           type="text"
@@ -32,7 +32,7 @@
 
 <script>
 import ErrorMessage from '@/components/ErrorMessage.vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'AuthForm',
@@ -55,12 +55,13 @@ export default {
     },
   },
   methods: {
-    login() {
+    ...mapActions('auth', ['login']),
+    submitLogin() {
       const payload = {
         phone: this.phone,
         password: this.password,
       };
-      this.$store.dispatch('auth/login', payload).then((result) => {
+      this.login(payload).then((result) => {
         if (result.success) {
           this.$router.push('/');
         }

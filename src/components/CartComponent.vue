@@ -41,6 +41,7 @@ export default {
   computed: {
     ...mapGetters('cart', ['getCart']),
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('order', ['getLastOrder']),
     isCartEmpty() {
       return this.cart.length === 0;
     },
@@ -50,6 +51,7 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['addToCart', 'removeFromCart', 'clearCart']),
+    ...mapActions('order', ['checkLastOrder']),
     incrementItem(product) {
       this.addToCart(product);
     },
@@ -59,6 +61,9 @@ export default {
     removeCart() {
       this.clearCart();
     },
+  },
+  created() {
+    this.checkLastOrder();
   },
 };
 </script>

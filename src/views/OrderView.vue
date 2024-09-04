@@ -1,6 +1,6 @@
 <template>
   <div class="order-container">
-    <div v-if="!showLastOrder">
+    <div v-if="!showLastOrder && isCart">
       <h2>Ваш заказ</h2>
       <div class="cart-in-order">
         <h3>Корзина</h3>
@@ -20,7 +20,7 @@
 <script>
 import CartComponent from '@/components/CartComponent.vue';
 import OrderForm from '@/components/Form/OrderForm.vue';
-import LastOrderComponent from '@/components/Form/LastOrderComponent.vue';
+import LastOrderComponent from '@/components/LastOrderComponent.vue';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
@@ -42,6 +42,9 @@ export default {
     ...mapGetters('cart', ['getCart']),
     showLastOrder() {
       return this.getLastOrder;
+    },
+    isCart() {
+      return this.getCart.length > 0;
     },
     cartIsNull() {
       return this.getCart.length === 0;
