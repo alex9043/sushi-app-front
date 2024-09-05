@@ -250,7 +250,7 @@ export default {
         peopleCount: this.peopleCount,
         orderItems: orderItems,
       };
-      this.createOrder(payload);
+      this.createOrder(payload).then(this.$router.push({ name: 'Home' }));
     },
   },
   created() {

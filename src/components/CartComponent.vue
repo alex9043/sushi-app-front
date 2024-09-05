@@ -19,11 +19,6 @@
       </div>
       <button @click="removeCart">X</button>
     </div>
-    <div class="cart-link" v-if="!isOrder">
-      <router-link to="/order">{{
-        cart.length > 0 ? 'Перейти к заказу' : 'Посмотреть последний заказ'
-      }}</router-link>
-    </div>
   </div>
 </template>
 <script>

@@ -47,12 +47,16 @@ const actions = {
   },
   checkLastOrder({ commit }) {
     commit('SET_LOADING', true);
-    commit('SET_ERROR', null);
-    if (localStorage.getItem('order')) {
-      const order = JSON.parse(localStorage.getItem('order'));
+    commit('CLEAR_ERROR');
+    const savedOrder = localStorage.getItem('order');
+    if (savedOrder) {
+      const order = JSON.parse(savedOrder);
       commit('SET_ORDER', order);
       commit('SET_LAST_ORDER', true);
+    } else {
+      commit('SET_LAST_ORDER', false);
     }
+    commit('SET_LOADING', false);
   },
 };
 
