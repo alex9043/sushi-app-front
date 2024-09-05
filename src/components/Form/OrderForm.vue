@@ -32,81 +32,98 @@
           />
         </div>
       </div>
-      <div class="address-group" v-if="!isAuth">
+      <div class="address-group">
         <h3>Адрес доставки</h3>
-        <div class="form-group">
-          <select
-            v-model="districtId"
-            id="districtId"
-            required
-            class="form-input"
-          >
-            <option disabled value="">Выберите район</option>
-            <option
-              v-for="district in districts"
-              :key="district.id"
-              :value="district.id"
+        <div v-if="!isAuth">
+          <div class="form-group">
+            <select
+              v-model="districtId"
+              id="districtId"
+              required
+              class="form-input"
             >
-              {{ district.name }}
-            </option>
-          </select>
+              <option disabled value="">Выберите район</option>
+              <option
+                v-for="district in districts"
+                :key="district.id"
+                :value="district.id"
+              >
+                {{ district.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              v-model="street"
+              id="street"
+              required
+              placeholder="Улица*"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              v-model="houseNumber"
+              id="houseNumber"
+              required
+              placeholder="Дом*"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              v-model="building"
+              id="building"
+              placeholder="Корпус"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              v-model="entrance"
+              id="entrance"
+              placeholder="Подъезд"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              v-model="floor"
+              id="floor"
+              placeholder="Этаж"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              v-model="apartmentNumber"
+              id="apartmentNumber"
+              required
+              placeholder="Кв-ра/Офис*"
+              class="form-input"
+            />
+          </div>
         </div>
-        <div class="form-group">
-          <input
-            type="text"
-            v-model="street"
-            id="street"
-            required
-            placeholder="Улица*"
-            class="form-input"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            v-model="houseNumber"
-            id="houseNumber"
-            required
-            placeholder="Дом*"
-            class="form-input"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            v-model="building"
-            id="building"
-            placeholder="Корпус"
-            class="form-input"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            v-model="entrance"
-            id="entrance"
-            placeholder="Подъезд"
-            class="form-input"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            v-model="floor"
-            id="floor"
-            placeholder="Этаж"
-            class="form-input"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="number"
-            v-model="apartmentNumber"
-            id="apartmentNumber"
-            required
-            placeholder="Кв-ра/Офис*"
-            class="form-input"
-          />
+        <div v-else>
+          <h4>Выберите нужный адрес</h4>
+          <fieldset>
+            <legend>Выберите адрес</legend>
+            <div v-for="address in addresses" :key="address.id">
+              <input type="radio" :value="address.id" v-model="addressId" />
+              <label>
+                {{ address.name }} - {{ address.street }}
+                {{ address.houseNumber }}, кв.
+                {{ address.apartmentNumber }}
+              </label>
+              <br />
+            </div>
+          </fieldset>
         </div>
       </div>
       <div class="delivery-group">
@@ -201,10 +218,11 @@ export default {
       comment: '',
       change: 5000,
       peopleCount: 2,
+      addressId: 1,
     };
   },
   computed: {
-    ...mapGetters('districts', ['allDistricts']),
+    ...mapGetters('address', ['allDistricts', 'allAddresses']),
     ...mapGetters('order', ['getError', 'isLoading']),
     ...mapGetters('cart', ['getCart']),
     ...mapGetters('auth', ['isAuthenticated']),
@@ -220,10 +238,13 @@ export default {
     isLoading() {
       return this.isLoading;
     },
+    addresses() {
+      return this.allAddresses;
+    },
   },
   methods: {
-    ...mapActions('districts', ['fetchDistricts']),
-    ...mapActions('order', ['createOrder']),
+    ...mapActions('address', ['fetchDistricts', 'fetchAddresses']),
+    ...mapActions('order', ['createGuestOrder', 'createUserOrder']),
     ...mapActions('cart', ['clearCart']),
     submitOrder() {
       const orderItems = this.getCart.map((i) => {
@@ -232,29 +253,48 @@ export default {
           id: i.product.id,
         };
       });
-      const payload = {
-        userName: this.userName,
-        userPhone: this.userPhone,
-        userEmail: this.userEmail,
-        districtId: this.districtId,
-        street: this.street,
-        houseNumber: this.houseNumber,
-        building: this.building,
-        entrance: this.entrance,
-        floor: this.floor,
-        apartmentNumber: this.apartmentNumber,
-        deliveryType: this.deliveryType,
-        paymentType: this.paymentType,
-        comment: this.comment,
-        change: this.change,
-        peopleCount: this.peopleCount,
-        orderItems: orderItems,
-      };
-      this.createOrder(payload).then(this.$router.push({ name: 'Home' }));
+      let payload;
+      if (this.isAuth) {
+        payload = {
+          addressId: this.addressId,
+          deliveryType: this.deliveryType,
+          paymentType: this.paymentType,
+          comment: this.comment,
+          change: this.change,
+          peopleCount: this.peopleCount,
+          orderItems: orderItems,
+        };
+        this.createUserOrder(payload).then(this.$router.push({ name: 'Home' }));
+      } else {
+        payload = {
+          userName: this.userName,
+          userPhone: this.userPhone,
+          userEmail: this.userEmail,
+          districtId: this.districtId,
+          street: this.street,
+          houseNumber: this.houseNumber,
+          building: this.building,
+          entrance: this.entrance,
+          floor: this.floor,
+          apartmentNumber: this.apartmentNumber,
+          deliveryType: this.deliveryType,
+          paymentType: this.paymentType,
+          comment: this.comment,
+          change: this.change,
+          peopleCount: this.peopleCount,
+          orderItems: orderItems,
+        };
+        this.createGuestOrder(payload).then(
+          this.$router.push({ name: 'Home' }),
+        );
+      }
     },
   },
   created() {
     this.fetchDistricts();
+    if (this.isAuth) {
+      this.fetchAddresses();
+    }
   },
 };
 </script>

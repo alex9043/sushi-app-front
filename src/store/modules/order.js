@@ -1,6 +1,7 @@
-// import { createGuestOrder } from "@/plugins/axios/modules/order";
-
-import { createGuestOrder } from '@/plugins/axios/modules/order';
+import {
+  createGuestOrder,
+  createUserOrder,
+} from '@/plugins/axios/modules/order';
 
 const state = {
   loading: false,
@@ -28,12 +29,28 @@ const mutations = {
 };
 
 const actions = {
-  createOrder({ commit, dispatch }, payload) {
+  createGuestOrder({ commit, dispatch }, payload) {
     commit('SET_LOADING', true);
-    commit('SET_ERROR', null);
+    commit('CLEAR_ERROR');
     return createGuestOrder(payload)
       .then((response) => {
         localStorage.setItem('order', JSON.stringify(response.data));
+        commit('SET_ORDER', response.data);
+        dispatch('cart/clearCart', null, { root: true });
+        return response.data;
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.response.data.errorMessages);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  createUserOrder({ commit, dispatch }, payload) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return createUserOrder(payload)
+      .then((response) => {
         commit('SET_ORDER', response.data);
         dispatch('cart/clearCart', null, { root: true });
         return response.data;

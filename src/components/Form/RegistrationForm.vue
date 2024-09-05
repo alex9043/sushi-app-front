@@ -183,7 +183,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('districts', ['allDistricts']),
+    ...mapGetters('address', ['allDistricts']),
     ...mapGetters('auth', ['isLoading', 'getError']),
     districts() {
       return this.allDistricts;
@@ -196,7 +196,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('districts', ['fetchDistricts']),
+    ...mapActions('address', ['fetchDistricts']),
     ...mapActions('auth', ['register']),
     submitRegister() {
       const payload = {

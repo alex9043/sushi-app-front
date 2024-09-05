@@ -63,7 +63,7 @@ export default {
       };
       this.login(payload).then((result) => {
         if (result.success) {
-          this.$router.push('/');
+          this.$router.push({ name: 'Home' });
         }
       });
     },

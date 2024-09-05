@@ -86,8 +86,14 @@ const actions = {
       .then(() => {
         return { success: true };
       })
-      .catch(() => {
-        commit('SET_ERROR', [{ message: 'Нерпвильные логин или пароль' }]);
+      .catch((error) => {
+        commit('SET_ERROR', [
+          {
+            message: error.response
+              ? error.response
+              : 'Неправильные логин или пароль',
+          },
+        ]);
         return {
           success: false,
         };
@@ -116,7 +122,6 @@ const actions = {
     }
   },
   syncCartWithServer({ dispatch }) {
-    console.log('sync');
     dispatch('cart/refreshCart', null, { root: true });
   },
   logout({ commit }) {

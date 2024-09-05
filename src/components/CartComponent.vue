@@ -19,6 +19,9 @@
       </div>
       <button @click="removeCart">X</button>
     </div>
+    <div class="cart-link" v-if="!isCartEmpty">
+      <router-link to="/order">Перейти к заказу</router-link>
+    </div>
   </div>
 </template>
 <script>
