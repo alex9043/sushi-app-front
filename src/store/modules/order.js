@@ -1,12 +1,14 @@
 import {
   createGuestOrder,
   createUserOrder,
+  getOrders,
 } from '@/plugins/axios/modules/order';
 
 const state = {
   loading: false,
   error: [],
-  order: [],
+  order: {},
+  orders: [],
   lastOrder: false,
 };
 
@@ -19,6 +21,9 @@ const mutations = {
   },
   SET_ORDER(state, order) {
     state.order = order;
+  },
+  SET_ORDERS(state, orders) {
+    state.orders = orders;
   },
   SET_LAST_ORDER(state, lastOrder) {
     state.lastOrder = lastOrder;
@@ -51,7 +56,7 @@ const actions = {
     commit('CLEAR_ERROR');
     return createUserOrder(payload)
       .then((response) => {
-        commit('SET_ORDER', response.data);
+        commit('SET_ORDERS', response.data);
         dispatch('cart/clearCart', null, { root: true });
         return response.data;
       })
@@ -75,10 +80,25 @@ const actions = {
     }
     commit('SET_LOADING', false);
   },
+  fetchOrders({ commit }) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return getOrders()
+      .then((response) => {
+        commit('SET_ORDERS', response.data);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.response.data.errorMessages);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
 };
 
 const getters = {
   getOrder: (state) => state.order,
+  getOrders: (state) => state.orders,
   getLastOrder: (state) => state.lastOrder,
   isLoading: (state) => state.loading,
   getError: (state) => state.error,

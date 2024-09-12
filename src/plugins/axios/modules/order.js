@@ -7,3 +7,7 @@ export const createGuestOrder = (order) => {
 export const createUserOrder = (order) => {
   return axios.post('/order/user', order);
 };
+
+export const getOrders = () => {
+  return axios.get('/order');
+};

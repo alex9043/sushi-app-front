@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import AuthView from '@/views/AuthView.vue';
 import OrderView from '@/views/OrderView.vue';
+import ControlPanelView from '@/views/ControlPanelView.vue';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/order',
     name: 'Order',
     component: OrderView,
+  },
+  {
+    path: '/control',
+    name: 'Control',
+    component: ControlPanelView,
   },
 ];
 

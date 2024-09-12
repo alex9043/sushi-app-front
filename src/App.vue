@@ -5,6 +5,7 @@
         <router-link to="/">Главная</router-link>
         <router-link to="/auth" v-if="!isAuthenticated">Войти</router-link>
         <a v-if="isAuthenticated" @click="handleLogout">Выйти</a>
+        <router-link to="/control">Панель управления</router-link>
         <a @click="toggleCart">Коризна</a>
       </nav>
     </header>
