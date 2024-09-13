@@ -34,6 +34,13 @@ export default {
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('cart', ['getCart']),
+    ...mapGetters('account', ['getColor', 'getBackgroundColor']),
+    color() {
+      return this.getColor;
+    },
+    backgroundColor() {
+      return this.getBackgroundColor;
+    },
   },
   methods: {
     ...mapActions('auth', ['logout', 'initializeAuthState']),
@@ -102,5 +109,10 @@ header {
   border: 1px solid #ccc;
   padding: 10px;
   width: 300px;
+}
+
+main {
+  background-color: v-bind('backgroundColor');
+  color: v-bind('color');
 }
 </style>
