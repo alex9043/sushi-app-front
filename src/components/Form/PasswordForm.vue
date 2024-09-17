@@ -56,6 +56,7 @@ export default {
         confirmPassword: this.confirmPassword,
       };
       this.changePassword(data);
+      this.$emit('close-form');
     },
   },
 };

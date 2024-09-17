@@ -1,4 +1,10 @@
-import { getDistricts, getAddresses } from '@/plugins/axios/modules/address';
+import {
+  getDistricts,
+  getAddresses,
+  createAddress,
+  updateAddress,
+  deleteAddress,
+} from '@/plugins/axios/modules/address';
 
 const state = {
   districts: [],
@@ -55,6 +61,50 @@ const actions = {
           commit('SET_LOADING', false);
         });
     }
+  },
+  addAddress({ commit }, payload) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return createAddress(payload)
+      .then((response) => {
+        console.log(response.data);
+        commit('SET_ADDRESSES', response.data);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  editAddress({ commit }, payload) {
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return updateAddress(payload)
+      .then((response) => {
+        commit('SET_ADDRESSES', response.data);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  removeAddress({ commit }, addressId) {
+    console.log(addressId);
+    commit('SET_LOADING', true);
+    commit('CLEAR_ERROR');
+    return deleteAddress(addressId)
+      .then((response) => {
+        commit('SET_ADDRESSES', response.data);
+      })
+      .catch((error) => {
+        commit('SET_ERROR', error.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
   },
 };
 

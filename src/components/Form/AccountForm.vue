@@ -58,7 +58,7 @@ export default {
         dateOfBirth: this.dateOfBirth,
       };
       this.changeAccountData(data);
-      this.$router.push({ name: 'Home' });
+      this.$emit('close-form');
     },
   },
 };

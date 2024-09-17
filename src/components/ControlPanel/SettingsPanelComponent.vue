@@ -8,7 +8,7 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
-  name: 'OrderPanelComponent',
+  name: 'SettingsPanelComponent',
   methods: {
     ...mapActions('account', ['changeColor']),
     toggleColor() {

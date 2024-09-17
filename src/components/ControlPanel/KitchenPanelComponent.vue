@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'OrderPanelComponent',
+  name: 'KitchenPanelComponent',
 };
 </script>
 
