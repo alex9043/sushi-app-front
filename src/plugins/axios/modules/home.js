@@ -7,3 +7,7 @@ export const getProducts = () => {
 export const getCategories = () => {
   return axios.get('/products/categories');
 };
+
+export const postReview = (productId, data) => {
+  return axios.post(`/products/${productId}/reviews`, data);
+};

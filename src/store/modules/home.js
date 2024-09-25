@@ -1,6 +1,11 @@
-import { getProducts, getCategories } from '@/plugins/axios/modules/home';
+import {
+  getProducts,
+  getCategories,
+  postReview,
+} from '@/plugins/axios/modules/home';
 
 const state = {
+  errors: [],
   products: [],
   categories: [],
 };
@@ -11,6 +16,12 @@ const mutations = {
   },
   SET_CATEGORIES(state, categories) {
     state.categories = categories;
+  },
+  SET_ERRORS(state, errors) {
+    state.errors = errors;
+  },
+  CLEAR_ERRORS(state) {
+    state.errors = [];
   },
 };
 
@@ -23,6 +34,12 @@ const actions = {
   fetchCategories({ commit }) {
     getCategories().then((response) => {
       commit('SET_CATEGORIES', response.data.categories);
+    });
+  },
+  createReview({ commit }, { productId, data }) {
+    commit('CLEAR_ERRORS');
+    postReview(productId, data).catch((errors) => {
+      commit('SET_ERRORS', errors.response.data.errorMessages);
     });
   },
 };

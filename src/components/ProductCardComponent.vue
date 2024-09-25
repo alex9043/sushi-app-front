@@ -1,5 +1,10 @@
 <template>
   <div class="product-card">
+    <div class="tags">
+      <p v-for="tag in product.tags" :key="tag.id" class="tag">
+        {{ tag.name }}
+      </p>
+    </div>
     <img :src="imageSrc" alt="Product Image" />
     <div class="product-cart-content">
       <button @click="decrementItem(product)">-</button>
@@ -89,6 +94,21 @@ export default {
   margin: 10px;
   width: 200px;
   text-align: center;
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 10px;
+    p {
+      margin: 0 5px 5px 0;
+      background-color: #f0f0f0;
+      padding: 3px 5px;
+      border-radius: 3px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
   img {
     max-width: 100%;
     height: auto;
