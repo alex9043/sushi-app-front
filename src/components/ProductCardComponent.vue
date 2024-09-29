@@ -59,9 +59,11 @@ export default {
     async setImageSrc() {
       if (this.product.base64image) {
         try {
-          const imageBlob = base64ToImage(
-            `data:image/jpeg;base64,${this.product.base64image}`,
-          );
+          const base64Data = this.product.base64image.startsWith('data:')
+            ? this.product.base64image
+            : `data:image/jpeg;base64,${this.product.base64image}`;
+
+          const imageBlob = base64ToImage(base64Data);
           this.imageSrc = URL.createObjectURL(imageBlob);
         } catch (error) {
           console.error(

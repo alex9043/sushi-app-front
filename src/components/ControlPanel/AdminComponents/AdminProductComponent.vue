@@ -1,69 +1,139 @@
 <template>
   <div class="admin-product">
-    <h4>Products</h4>
-    <div>
-      <label for="tags">Tags:</label>
-      <select v-model="selectedTag">
-        <option value="">All Tags</option>
-        <option v-for="tag in uniqueTags" :key="tag" :value="tag">
-          {{ tag }}
-        </option>
-      </select>
-    </div>
-    <div>
-      <label for="categories">Categories:</label>
-      <select v-model="selectedCategory">
-        <option value="">All Categories</option>
-        <option
-          v-for="category in uniqueCategories"
-          :key="category"
-          :value="category"
-        >
-          {{ category }}
-        </option>
-      </select>
+    <div
+      v-if="
+        !isTagComponent &&
+        !isCategoryComponent &&
+        !isIngredientComponent &&
+        !isProductForm
+      "
+    >
+      <h4>Products</h4>
+      <div class="product-add-buttons">
+        <button @click="showTagComponent">Теги</button>
+        <button @click="showCategoryComponent">Категории</button>
+        <button @click="showIngredientComponent">Ингредиенты</button>
+        <button @click="showProductForm">Добавить продукт</button>
+      </div>
+
+      <div>
+        <label for="name">Search by Name:</label>
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Enter product name"
+        />
+      </div>
+
+      <div>
+        <label for="tags">Tags:</label>
+        <select v-model="selectedTag">
+          <option value="">All Tags</option>
+          <option v-for="tag in uniqueTags" :key="tag" :value="tag">
+            {{ tag }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="categories">Categories:</label>
+        <select v-model="selectedCategory">
+          <option value="">All Categories</option>
+          <option
+            v-for="category in uniqueCategories"
+            :key="category"
+            :value="category"
+          >
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Tags</th>
+            <th>Categories</th>
+            <th>Ingredients</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="product in filteredProducts" :key="product.id">
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.rating }}</td>
+            <td>{{ product.tags.map((tag) => tag.name).join(', ') }}</td>
+            <td>
+              {{
+                product.categories.map((category) => category.name).join(', ')
+              }}
+            </td>
+            <td>
+              {{
+                product.ingredients
+                  .map((ingredient) => ingredient.name)
+                  .join(', ')
+              }}
+            </td>
+            <td>
+              <button @click="editProduct(product.id)">Edit</button>
+              <button @click="deleteProduct(product.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button @click="closePanel">Закрыть окно</button>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Rating</th>
-          <th>Tags</th>
-          <th>Categories</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in filteredProducts" :key="product.id">
-          <td>{{ product.name }}</td>
-          <td>{{ product.price }}</td>
-          <td>{{ product.rating }}</td>
-          <td>{{ product.tags.map((tag) => tag.name).join(', ') }}</td>
-          <td>
-            {{ product.categories.map((category) => category.name).join(', ') }}
-          </td>
-          <td>
-            <button @click="editProduct(product.id)">Edit</button>
-            <button @click="deleteProduct(product.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button @click="closePanel">Закрыть окно</button>
+    <AdminTagComponent
+      v-if="isTagComponent"
+      @close-component="closeComponent"
+    />
+    <AdminCategoryComponent
+      v-if="isCategoryComponent"
+      @close-component="closeComponent"
+    />
+    <AdminIngredientComponent
+      v-if="isIngredientComponent"
+      @close-component="closeComponent"
+    />
+    <AdminProductForm
+      v-if="isProductForm"
+      :productData="selectedProduct"
+      @close-form="closeComponent"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import AdminTagComponent from '@/components/ControlPanel/AdminComponents/AdminTagComponent.vue';
+import AdminCategoryComponent from '@/components/ControlPanel/AdminComponents/AdminCategoryComponent.vue';
+import AdminIngredientComponent from '@/components/ControlPanel/AdminComponents/AdminIngredientComponent.vue';
+import AdminProductForm from '@/components/ControlPanel/AdminComponents/Form/AdminProductForm.vue';
 
 export default {
   name: 'AdminProductComponent',
+  components: {
+    AdminTagComponent,
+    AdminCategoryComponent,
+    AdminIngredientComponent,
+    AdminProductForm,
+  },
   data() {
     return {
       selectedTag: '',
       selectedCategory: '',
+      selectedProduct: null,
+      searchQuery: '',
+      isTagComponent: '',
+      isCategoryComponent: '',
+      isIngredientComponent: '',
+      isProductForm: '',
     };
   },
   computed: {
@@ -91,25 +161,53 @@ export default {
         const matchesTag = this.selectedTag
           ? product.tags.some((tag) => tag.name === this.selectedTag)
           : true;
+
         const matchesCategory = this.selectedCategory
           ? product.categories.some(
               (category) => category.name === this.selectedCategory,
             )
           : true;
-        return matchesTag && matchesCategory;
+
+        const matchesName = product.name
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+
+        return matchesTag && matchesCategory && matchesName;
       });
     },
   },
   methods: {
-    ...mapActions('home', ['fetchProducts']),
+    ...mapActions('home', ['fetchProducts', 'removeProduct']),
     closePanel() {
       this.$emit('close-panel');
     },
     editProduct(productId) {
-      console.log(`Edit product with ID: ${productId}`);
+      this.selectedProduct = this.allProducts.find(
+        (product) => product.id === productId,
+      );
+      this.showProductForm();
     },
     deleteProduct(productId) {
-      console.log(`Delete product with ID: ${productId}`);
+      this.removeProduct(productId);
+    },
+    showTagComponent() {
+      this.isTagComponent = true;
+    },
+    showCategoryComponent() {
+      this.isCategoryComponent = true;
+    },
+    showIngredientComponent() {
+      this.isIngredientComponent = true;
+    },
+    showProductForm() {
+      this.isProductForm = true;
+    },
+    closeComponent() {
+      this.isTagComponent = false;
+      this.isCategoryComponent = false;
+      this.isIngredientComponent = false;
+      this.isProductForm = false;
+      this.selectedProduct = null;
     },
   },
   created() {
@@ -123,6 +221,19 @@ export default {
   width: 500px;
   margin: 0 auto;
   padding: 20px;
+
+  .product-add-buttons {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      padding: 5px 10px;
+      background-color: #ddd;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+  }
 
   table {
     margin-top: 20px;
@@ -141,7 +252,8 @@ export default {
     margin-bottom: 5px;
   }
 
-  select {
+  select,
+  input {
     width: 100%;
     padding: 5px;
     border: 1px solid #ccc;
