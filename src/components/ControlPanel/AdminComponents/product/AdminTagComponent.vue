@@ -44,7 +44,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AdminTagForm from '@/components/ControlPanel/AdminComponents/Form/AdminTagForm.vue';
+import AdminTagForm from '@/components/ControlPanel/AdminComponents/product/Form/AdminTagForm.vue';
 
 export default {
   name: 'AdminTagComponent',

@@ -44,7 +44,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AdminIngredientForm from '@/components/ControlPanel/AdminComponents/Form/AdminIngredientForm.vue';
+import AdminIngredientForm from '@/components/ControlPanel/AdminComponents/product/Form/AdminIngredientForm.vue';
 export default {
   name: 'AdminIngredientComponent',
   components: {

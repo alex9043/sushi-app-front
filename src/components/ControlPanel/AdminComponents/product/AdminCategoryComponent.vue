@@ -45,7 +45,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AdminCategoryForm from '@/components/ControlPanel/AdminComponents/Form/AdminCategoryForm.vue';
+import AdminCategoryForm from '@/components/ControlPanel/AdminComponents/product/Form/AdminCategoryForm.vue';
 export default {
   name: 'AdminCategoryComponent',
   components: {

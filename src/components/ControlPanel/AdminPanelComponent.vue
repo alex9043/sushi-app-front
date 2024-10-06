@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import AdminProductComponent from '@/components/ControlPanel/AdminComponents/AdminProductComponent.vue';
-import AdminUsersComponent from '@/components/ControlPanel/AdminComponents/AdminUsersComponent.vue';
+import AdminProductComponent from '@/components/ControlPanel/AdminComponents/product/AdminProductComponent.vue';
+import AdminUsersComponent from '@/components/ControlPanel/AdminComponents/user/AdminUsersComponent.vue';
 import AdminOrderComponent from '@/components/ControlPanel/AdminComponents/AdminOrderComponent.vue';
 export default {
   name: 'AdminPanelComponent',

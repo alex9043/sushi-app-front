@@ -52,6 +52,7 @@
       <table>
         <thead>
           <tr>
+            <th>Image</th>
             <th>Name</th>
             <th>Price</th>
             <th>Rating</th>
@@ -63,6 +64,20 @@
         </thead>
         <tbody>
           <tr v-for="product in filteredProducts" :key="product.id">
+            <td>
+              <img
+                v-if="product.base64image"
+                :src="'data:image/jpeg;base64,' + product.base64image"
+                alt="Product image"
+                class="product-image"
+              />
+              <img
+                v-else
+                src="@/assets/product/product_not_found.jpg"
+                alt="No image available"
+                class="product-image"
+              />
+            </td>
             <td>{{ product.name }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.rating }}</td>
@@ -111,10 +126,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import AdminTagComponent from '@/components/ControlPanel/AdminComponents/AdminTagComponent.vue';
-import AdminCategoryComponent from '@/components/ControlPanel/AdminComponents/AdminCategoryComponent.vue';
-import AdminIngredientComponent from '@/components/ControlPanel/AdminComponents/AdminIngredientComponent.vue';
-import AdminProductForm from '@/components/ControlPanel/AdminComponents/Form/AdminProductForm.vue';
+import AdminTagComponent from '@/components/ControlPanel/AdminComponents/product/AdminTagComponent.vue';
+import AdminCategoryComponent from '@/components/ControlPanel/AdminComponents/product/AdminCategoryComponent.vue';
+import AdminIngredientComponent from '@/components/ControlPanel/AdminComponents/product/AdminIngredientComponent.vue';
+import AdminProductForm from '@/components/ControlPanel/AdminComponents/product/Form/AdminProductForm.vue';
 
 export default {
   name: 'AdminProductComponent',
@@ -244,7 +259,19 @@ export default {
     td {
       padding: 10px;
       border: 1px solid #ddd;
+      text-align: center;
     }
+
+    th {
+      background-color: #f4f4f4;
+    }
+  }
+
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
   }
 
   label {
